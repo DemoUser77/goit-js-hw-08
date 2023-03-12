@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "parcel-project-template": "file:.."
+  }
+}
