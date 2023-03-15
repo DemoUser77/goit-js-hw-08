@@ -1,44 +1,40 @@
 import throttle from 'lodash.throttle';
 
 const formEl = document.querySelector('.feedback-form');
+const inputEl = document.querySelector('.feedback-form input')
 const textareaEl = document.querySelector('.feedback-form textarea')
 
 const LOCAL_KEY = "feedback-form-state";
-const formData = {};
-
-populetTextarea();
+let formData = {};
 
 formEl.addEventListener('submit', handleFormSubmit);
-textareaEl.addEventListener('input', throttle(handleTextareaInput, 500));
+formEl.addEventListener('input', throttle(handleTextareaInput, 500));
 
 
 function handleTextareaInput(event) {
-    const message = event.target.value;
 
-    localStorage.setItem(LOCAL_KEY, message);
-
+    formData[event.target.name] = event.target.value;
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(formData));
 }
 
 function handleFormSubmit(event) {
     event.preventDefault();
-    event.currentTarget.reset();
-    localStorage.removeItem(LOCAL_KEY);
+
+    if (inputEl.value !== '' && textareaEl.value !== '') {
+        console.log(formData);
+        event.target.reset();
+        localStorage.removeItem(LOCAL_KEY);
+        return;
+    }
 }
+populetTextarea();
 
 function populetTextarea() {
     const savedMessage = localStorage.getItem(LOCAL_KEY);
 
     if (savedMessage) {
-        console.log(savedMessage);
-        textareaEl.value = savedMessage;
+        formData = JSON.parse(savedMessage);
+        inputEl.value = formData.email || '';
+        textareaEl.value = formData.message || '';
     }
-    
 }
-
-formEl.addEventListener('input', e => {
-    formData[e.target.name] = e.target.value;
-
-    console.log(formData);
-
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(formData));
-})
