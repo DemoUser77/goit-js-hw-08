@@ -22,10 +22,13 @@ function handleFormSubmit(event) {
 
     if (inputEl.value !== '' && textareaEl.value !== '') {
         console.log(formData);
+       
+       localStorage.removeItem(LOCAL_KEY);
         event.target.reset();
-        localStorage.removeItem(LOCAL_KEY);
+        formData = {};
         return;
     }
+     
 }
 populetTextarea();
 
